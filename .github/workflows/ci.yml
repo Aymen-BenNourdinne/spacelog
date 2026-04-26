@@ -1,0 +1,37 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Validate HTML file exists
+        run: |
+          if [ ! -f index.html ]; then
+            echo "ERROR: index.html not found!"
+            exit 1
+          fi
+          echo "✅ index.html found"
+
+      - name: Validate CSS file exists
+        run: |
+          if [ ! -f style.css ]; then
+            echo "ERROR: style.css not found!"
+            exit 1
+          fi
+          echo "✅ style.css found"
+
+      - name: Build Docker image
+        run: docker build -t spacelog-app .
+
+      - name: Verify image exists
+        run: docker images spacelog-app
