@@ -1,0 +1,43 @@
+name: CI/CD Pipeline
+
+# When does this run?
+on:
+  push:
+    branches: [main, develop]   # Every time you push to main or develop
+  pull_request:
+    branches: [main]            # Every time someone opens a Pull Request to main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest      # GitHub gives us a free Linux machine to run this
+
+    steps:
+      # Step 1: Download our code onto the GitHub machine
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Check that our HTML file exists and is not empty
+      - name: Validate HTML file exists
+        run: |
+          if [ ! -f index.html ]; then
+            echo "ERROR: index.html not found!"
+            exit 1
+          fi
+          echo "✅ index.html found"
+
+      # Step 3: Check that CSS file exists
+      - name: Validate CSS file exists
+        run: |
+          if [ ! -f style.css ]; then
+            echo "ERROR: style.css not found!"
+            exit 1
+          fi
+          echo "✅ style.css found"
+
+      # Step 4: Build the Docker image
+      - name: Build Docker image
+        run: docker build -t spacelog-app .
+
+      # Step 5: Confirm the image was created
+      - name: Verify image exists
+        run: docker images spacelog-app
