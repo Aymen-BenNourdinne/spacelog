@@ -1,6 +1,6 @@
 # Step 1: Use nginx as our base image (lightweight web server)
 # nginx will serve our HTML/CSS/JS files
-FRM nginx:alpine
+FROM nginx:alpine
 
 # Step 2: Copy our website files into the nginx folder
 # nginx serves files from /usr/share/nginx/html by default
